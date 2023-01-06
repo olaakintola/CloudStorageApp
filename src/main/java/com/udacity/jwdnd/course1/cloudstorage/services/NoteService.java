@@ -19,18 +19,17 @@ public class NoteService {
     }
 
     public int addNote(Note note, String username){
-        System.out.println(username);
+
         String notetitle = note.getNotetitle();
         String notedescription = note.getNotedescription();
         User user = this.userService.getUser(username);
         Integer userid = user.getUserid();
-        System.out.println(userid.intValue() + "userid");
-        System.out.println(userid);
+
         return noteMapper.insertNote(new Note(null, notetitle, notedescription, userid.intValue() ));
     }
 
     public void updateNote(Note note, String username){
-        System.out.println(note.getNoteid().intValue() + "note id");
+
         Integer noteid = note.getNoteid();
         String notetitle = note.getNotetitle();
         String notedescription = note.getNotedescription();
@@ -38,8 +37,6 @@ public class NoteService {
         Integer userid = user.getUserid();
 
         this.noteMapper.updateNote( noteid.intValue(), notetitle, notedescription, userid.intValue()  );
-        System.out.println(note.getNoteid().intValue() + "note id");
-
     }
 
     public void deleteNote(Integer noteid){

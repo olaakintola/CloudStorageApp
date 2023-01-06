@@ -17,9 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -56,78 +53,42 @@ public class HomeController {
         User user = this.userService.getUser(username);
         Integer userid = user.getUserid();
         note.setUserId(userid);
-        System.out.println(note.getUserId() );
+
         if(note.getNoteid() == null){
             this.noteService.addNote(note, username);
         }else{
             this.noteService.updateNote(note, username);
         }
-        List<Note> notes = this.noteService.displayAllNotes(userid);
-
-        for(Note aNote: notes){
-            System.out.println(aNote.getNoteid().intValue() + "id");
-        }
-
-        model.addAttribute("userNotes", this.noteService.displayAllNotes(userid));
-        model.addAttribute("unencryptedPasswordMap", this.credentialService.getUnecryptedPassword(userid));
-        model.addAttribute("userCredentials", this.credentialService.displayAllCredentials(userid));
-        model.addAttribute("files", this.fileStorageService.loadAllFiles(userid));
 
         return "redirect:/home";
-
     }
 
     @GetMapping("/home/deleteNote/{id}")
     public String deleteNote(@PathVariable("id") Integer id, @ModelAttribute("noteObject") Note note, Model model, Authentication authentication) {
-        String username = authentication.getName();
-        User user = this.userService.getUser(username);
-        Integer userid = user.getUserid();
-        this.noteService.deleteNote(id);
 
-        model.addAttribute("userNotes", this.noteService.displayAllNotes(userid));
-        model.addAttribute("unencryptedPasswordMap", this.credentialService.getUnecryptedPassword(userid));
-        model.addAttribute("userCredentials", this.credentialService.displayAllCredentials(userid));
-        model.addAttribute("files", this.fileStorageService.loadAllFiles(userid));
+        this.noteService.deleteNote(id);
         return "redirect:/home";
     }
 
     @PostMapping("/home/credential")
     public String addCredential(@ModelAttribute("credentialObject") Credential credential, @ModelAttribute("noteObject") Note note, Model model, Authentication authentication){
-        Map<Integer, String> passwordMap = new HashMap<>();
-        String username = authentication.getName();
-        User user = this.userService.getUser(username);
-        Integer userid = user.getUserid();
-        if(credential.getCredentialid() == null){
 
-            Integer credentialId = this.credentialService.addCredential(credential, username);
+        String username = authentication.getName();
+        if(credential.getCredentialid() == null){
+            this.credentialService.addCredential(credential, username);
         }else{
             this.credentialService.updateCredential(credential, username);
         }
 
-        model.addAttribute("userNotes", this.noteService.displayAllNotes(userid));
-        model.addAttribute("unencryptedPasswordMap", this.credentialService.getUnecryptedPassword(userid));
-        model.addAttribute("userCredentials", this.credentialService.displayAllCredentials(userid));
-        model.addAttribute("files", this.fileStorageService.loadAllFiles(userid));
-
         return "redirect:/home";
-
     }
 
 
     @GetMapping("/home/deleteCredential/{id}")
     public String deleteCredential(@PathVariable("id") Integer id, @ModelAttribute("credentialObject") Credential credential ,@ModelAttribute("noteObject") Note note, Model model, Authentication authentication) {
-        String username = authentication.getName();
-        User user = this.userService.getUser(username);
-        Integer userid = user.getUserid();
+
         this.credentialService.deleteCredential(id);
-
-        model.addAttribute("userNotes", this.noteService.displayAllNotes(userid));
-        model.addAttribute("unencryptedPasswordMap", this.credentialService.getUnecryptedPassword(userid));
-        model.addAttribute("userCredentials", this.credentialService.displayAllCredentials(userid));
-        model.addAttribute("files", this.fileStorageService.loadAllFiles(userid));
-
         return "redirect:/home";
-
     }
 
 
@@ -165,17 +126,8 @@ public class HomeController {
 
     @GetMapping("/displayAllFiles")
     public String getAllUploadedFiles(@ModelAttribute("credentialObject") Credential credential, @ModelAttribute("noteObject") Note note, Model model, Authentication authentication){
-        String username = authentication.getName();
-        User user = this.userService.getUser(username);
-        Integer userid = user.getUserid();
-
-        model.addAttribute("userNotes", this.noteService.displayAllNotes(userid));
-        model.addAttribute("unencryptedPasswordMap", this.credentialService.getUnecryptedPassword(userid));
-        model.addAttribute("userCredentials", this.credentialService.displayAllCredentials(userid));
-        model.addAttribute("files", this.fileStorageService.loadAllFiles(userid));
 
         return "redirect:/home";
-
     }
 
     @GetMapping("/home/download-file/{id}")
@@ -190,18 +142,9 @@ public class HomeController {
 
     @GetMapping("/home/deleteFile/{id}")
     public String deleteFile(@PathVariable("id") Integer id, @ModelAttribute("credentialObject") Credential credential ,@ModelAttribute("noteObject") Note note, Model model, Authentication authentication) {
-        String username = authentication.getName();
-        User user = this.userService.getUser(username);
-        Integer userid = user.getUserid();
+
         this.fileStorageService.deleteFile(id);
-
-        model.addAttribute("userNotes", this.noteService.displayAllNotes(userid));
-        model.addAttribute("unencryptedPasswordMap", this.credentialService.getUnecryptedPassword(userid));
-        model.addAttribute("userCredentials", this.credentialService.displayAllCredentials(userid));
-        model.addAttribute("files", this.fileStorageService.loadAllFiles(userid));
-
         return "redirect:/home";
-
     }
 
 }

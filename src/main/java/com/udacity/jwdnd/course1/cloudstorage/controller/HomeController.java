@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-//@RequestMapping("/home")
 public class HomeController {
 
     private NoteService noteService;
@@ -76,7 +75,6 @@ public class HomeController {
 
         return "redirect:/home";
 
-//        return "home";
     }
 
     @GetMapping("/home/deleteNote/{id}")
@@ -91,7 +89,6 @@ public class HomeController {
         model.addAttribute("userCredentials", this.credentialService.displayAllCredentials(userid));
         model.addAttribute("files", this.fileStorageService.loadAllFiles(userid));
         return "redirect:/home";
-//            return "home";
     }
 
     @PostMapping("/home/credential")
@@ -114,7 +111,6 @@ public class HomeController {
 
         return "redirect:/home";
 
-//        return "home";
     }
 
 
@@ -132,41 +128,7 @@ public class HomeController {
 
         return "redirect:/home";
 
-//        return "home";
     }
-
-
-//    @PostMapping("/home/file-upload")
-//    public String handleFileUpload(@RequestParam("fileUpload")MultipartFile fileUpload, @ModelAttribute("credentialObject") Credential credential, @ModelAttribute("noteObject") Note note, Model model, Authentication authentication) throws IOException {
-//
-//        String username = authentication.getName();
-//        User user = this.userService.getUser(username);
-//        Integer userid = user.getUserid();
-//
-//        String uploadFileError = null;
-//
-//        if(fileUpload.isEmpty() ){
-//            uploadFileError = "Failed to store empty file.";
-//        }
-//
-//        if(uploadFileError == null){
-//            String fileName = fileUpload.getOriginalFilename();
-//            boolean fileNameInUseByUser = this.fileStorageService.isFileNameInUseByUser(userid, fileName);
-//            if(fileNameInUseByUser){
-//                uploadFileError = "You have already stored a file under similar name";
-//            }
-//        }
-//
-//        if(uploadFileError == null){
-//            this.fileStorageService.storeFile(fileUpload, username);
-//            model.addAttribute("uploadFileSuccess", true);
-//        }else{
-//            model.addAttribute("uploadFileError", uploadFileError);
-//        }
-//
-//        model.addAttribute("files", this.fileStorageService.loadAllFiles(userid));
-//        return "home";
-//    }
 
 
     @PostMapping("/home/file-upload")
@@ -214,7 +176,6 @@ public class HomeController {
 
         return "redirect:/home";
 
-//        return "home";
     }
 
     @GetMapping("/home/download-file/{id}")
@@ -241,7 +202,6 @@ public class HomeController {
 
         return "redirect:/home";
 
-//        return "home";
     }
 
 }

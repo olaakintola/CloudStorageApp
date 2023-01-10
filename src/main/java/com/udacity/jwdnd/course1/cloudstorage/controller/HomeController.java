@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 
 @Controller
 public class HomeController {
@@ -54,41 +55,102 @@ public class HomeController {
         Integer userid = user.getUserid();
         note.setUserId(userid);
 
+        String taskError = null;
+
         if(note.getNoteid() == null){
-            this.noteService.addNote(note, username);
+            try {
+                this.noteService.addNote(note, username);
+            }catch (Exception e){
+                taskError = "Note cannot be created";
+            }
+
         }else{
-            this.noteService.updateNote(note, username);
+            try {
+                this.noteService.updateNote(note, username);
+            }catch (Exception e){
+                taskError = "Note cannot be updated";
+            }
         }
 
-        return "redirect:/home";
+        if(taskError == null){
+            model.addAttribute("successMessage", true);
+            model.addAttribute("failureMessage", false);
+        }else{
+            model.addAttribute("failureMessage", taskError);
+        }
+
+        return "result";
     }
 
     @GetMapping("/home/deleteNote/{id}")
     public String deleteNote(@PathVariable("id") Integer id, @ModelAttribute("noteObject") Note note, Model model, Authentication authentication) {
 
-        this.noteService.deleteNote(id);
-        return "redirect:/home";
+        String taskError = null;
+        try {
+            this.noteService.deleteNote(id);
+        }
+        catch (Exception e) {
+            taskError = "Error: Selected Note cannot be deleted";
+        }
+
+        if(taskError == null){
+            model.addAttribute("successMessage", true);
+            model.addAttribute("failureMessage", false);
+        }else{
+            model.addAttribute("failureMessage", taskError);
+        }
+        return "result";
     }
 
     @PostMapping("/home/credential")
     public String addCredential(@ModelAttribute("credentialObject") Credential credential, @ModelAttribute("noteObject") Note note, Model model, Authentication authentication){
 
-        String username = authentication.getName();
-        if(credential.getCredentialid() == null){
-            this.credentialService.addCredential(credential, username);
-        }else{
-            this.credentialService.updateCredential(credential, username);
+        String taskError = null;
+        /* Try creating a valid URL */
+        try {
+            new URL(credential.getUrl() ).toURI();
+        }
+        // If there was an Exception while creating URL object
+        catch (Exception e) {
+            taskError = "This is an invalid url";
         }
 
-        return "redirect:/home";
+        if(taskError == null) {
+            String username = authentication.getName();
+            if(credential.getCredentialid() == null){
+                this.credentialService.addCredential(credential, username);
+            }else{
+                this.credentialService.updateCredential(credential, username);
+            }
+            model.addAttribute("successMessage", true);
+            model.addAttribute("failureMessage", false);
+        }else{
+            model.addAttribute("failureMessage", taskError);
+        }
+
+        return "result";
     }
 
 
     @GetMapping("/home/deleteCredential/{id}")
     public String deleteCredential(@PathVariable("id") Integer id, @ModelAttribute("credentialObject") Credential credential ,@ModelAttribute("noteObject") Note note, Model model, Authentication authentication) {
 
-        this.credentialService.deleteCredential(id);
-        return "redirect:/home";
+        String taskError = null;
+        try {
+            this.credentialService.deleteCredential(id);
+        }
+        catch (Exception e) {
+            taskError = "Error: Selected Url Credential cannot be deleted";
+        }
+
+        if(taskError == null){
+            model.addAttribute("successMessage", true);
+            model.addAttribute("failureMessage", false);
+        }else{
+            model.addAttribute("failureMessage", taskError);
+        }
+
+        return "result";
     }
 
 
@@ -99,35 +161,29 @@ public class HomeController {
         User user = this.userService.getUser(username);
         Integer userid = user.getUserid();
 
-        String uploadFileError = null;
+        String taskError = null;
 
         if(fileUpload.isEmpty() ){
-            uploadFileError = "Failed to store empty file.";
+            taskError = "Failed to store empty file.";
         }
 
-        if(uploadFileError == null){
+        if(taskError == null){
             String fileName = fileUpload.getOriginalFilename();
             boolean fileNameInUseByUser = this.fileStorageService.isFileNameInUseByUser(userid, fileName);
             if(fileNameInUseByUser){
-                uploadFileError = "You have already stored a file under similar name";
+                taskError = "You have already stored a file under similar name";
             }
         }
 
-        if(uploadFileError == null){
+        if(taskError == null){
             this.fileStorageService.storeFile(fileUpload, username);
-            model.addAttribute("uploadFileSuccess", true);
-            model.addAttribute("uploadFileError", false);
+            model.addAttribute("successMessage", true);
+            model.addAttribute("failureMessage", false);
         }else{
-            model.addAttribute("uploadFileError", uploadFileError);
+            model.addAttribute("failureMessage", taskError);
         }
 
         return "result";
-    }
-
-    @GetMapping("/displayAllFiles")
-    public String getAllUploadedFiles(@ModelAttribute("credentialObject") Credential credential, @ModelAttribute("noteObject") Note note, Model model, Authentication authentication){
-
-        return "redirect:/home";
     }
 
     @GetMapping("/home/download-file/{id}")
@@ -143,8 +199,22 @@ public class HomeController {
     @GetMapping("/home/deleteFile/{id}")
     public String deleteFile(@PathVariable("id") Integer id, @ModelAttribute("credentialObject") Credential credential ,@ModelAttribute("noteObject") Note note, Model model, Authentication authentication) {
 
-        this.fileStorageService.deleteFile(id);
-        return "redirect:/home";
+        String taskError = null;
+        try {
+            this.fileStorageService.deleteFile(id);
+        }
+        catch (Exception e) {
+            taskError = "Error: Selected File cannot be deleted";
+        }
+
+        if(taskError == null){
+            model.addAttribute("successMessage", true);
+            model.addAttribute("failureMessage", false);
+        }else{
+            model.addAttribute("failureMessage", taskError);
+        }
+
+        return "result";
     }
 
 }

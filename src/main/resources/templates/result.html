@@ -10,18 +10,18 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-            <div class="alert alert-success fill-parent" th:if="${uploadFileSuccess}">
-                <h1 class="display-5" id="success" th:if="${uploadFileSuccess}">Success</h1>
-                <span th:if="${uploadFileSuccess}">Your changes were successfully saved. Click <a id="all-files-after-success-link" th:href="@{/displayAllFiles}">here</a> to continue.</span>
+            <div class="alert alert-success fill-parent" th:if="${successMessage}">
+                <h1 class="display-5" id="success" th:if="${successMessage}">Success</h1>
+                <span th:if="${successMessage}">Your changes were successfully saved. Click <a id="all-files-after-success-link" th:href="@{/home}">here</a> to continue.</span>
             </div>
-            <div class="alert alert-danger fill-parent" th:if="${uploadFileError}" >
-                <h1 class="display-5" id="fileError" th:if="${uploadFileError}" >Error</h1>
-                <span th:if="${uploadFileError}">Your changes were not saved. Click <a id="all-files-after-error-link" th:href="@{/displayAllFiles}">here</a> to continue.</span>
+            <div class="alert alert-danger fill-parent" th:if="${failureMessage}" >
+                <h1 class="display-5" id="fileError" th:if="${failureMessage}" >Error</h1>
+                <span th:if="${failureMessage}">Your changes were not saved. Click <a id="all-files-after-error-link" th:href="@{/home}">here</a> to continue.</span>
             </div>
-            <div class="alert alert-danger fill-parent" th:if="${uploadFileError}">
-                <h1 class="display-5" th:if="${uploadFileError}">Error</h1>
-                <span th:if="${uploadFileError}" th:text="${uploadFileError}">Example Error Message</span>
-                <span th:if="${uploadFileError}">Click <a id="display-files-after-error-text-link" th:href="@{/displayAllFiles}" >here</a> to continue.</span>
+            <div class="alert alert-danger fill-parent" th:if="${failureMessage}">
+                <h1 class="display-5" th:if="${failureMessage}">Error</h1>
+                <span th:if="${failureMessage}" th:text="${failureMessage}">Example Error Message</span>
+                <span th:if="${failureMessage}">Click <a id="display-files-after-error-text-link" th:href="@{/home}" >here</a> to continue.</span>
             </div>
         </div>
     </body>

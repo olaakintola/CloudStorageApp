@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 
 import java.io.File;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 import static org.springframework.util.Assert.*;
 
@@ -190,9 +191,9 @@ class CloudStorageApplicationTests {
 
 		// Try to upload an arbitrary large file
 		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
-		String fileName = "upload5m.zip";
+//		String fileName = "upload5m.zip";
 
-//		String fileName = "C:\\Users\\olani\\OneDrive\\Desktop\\SAPHybrisFinal.pdf";
+		String fileName = "C:\\Users\\olani\\OneDrive\\Desktop\\SAPHybrisFinal.pdf";
 
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileUpload")));
 		WebElement fileSelectButton = driver.findElement(By.id("fileUpload"));
@@ -207,6 +208,50 @@ class CloudStorageApplicationTests {
 		}
 		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
 	}
+
+	private void homePageAccessNeedsLogin(){
+		driver.get("http://localhost:" + port + "/home");
+	}
+
+	@Test
+	public void testhomePageAccessNeedsLogin(){
+		homePageAccessNeedsLogin();
+		Assertions.assertEquals("Login", driver.getTitle());
+	}
+
+	private void doLogOut(){
+		WebElement logOutButton = driver.findElement(By.id("logout-button"));
+		logOutButton.click();
+	}
+
+	@Test
+	public void testHomePageNotAccessibleAfterLogout() {
+		// Create a test account
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
+		Assertions.assertEquals("Home", driver.getTitle());
+		doLogOut();
+		homePageAccessNeedsLogin();
+		Assertions.assertEquals("Login", driver.getTitle());
+	}
+
+//	@Test
+//	public void testUserSignupLoginAndAddChatMessage(){
+
+//
+//		webDriver.get("http://localhost:" + port + "/signup");
+//		signupPage = new SignupPage(webDriver);
+//		signupPage.registerUser("Jane", "Doe", firstUser, firstUserPassword);
+//		webDriver.get("http://localhost:" + port + "/login");
+//		loginPage = new LoginPage(webDriver);
+//		loginPage.userLogin(firstUser, firstUserPassword);
+//		chatPage = new ChatPage(webDriver);
+//		chatPage.addChatMessage(firstUserChatMessage, "Shout");
+//		String[] result = chatPage.firstUserViewedMessages().get(0).split(":");
+//		assertEquals(firstUser, result[0] );
+//		assertEquals(firstUserChatMessage.toUpperCase(), result[1].toUpperCase().trim() );
+//		chatPage.userLogOut();
+//	}
 
 
 

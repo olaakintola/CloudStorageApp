@@ -1,5 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.usertesting.HomePage;
+import com.udacity.jwdnd.course1.cloudstorage.usertesting.ResultPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -26,6 +28,10 @@ class CloudStorageApplicationTests {
 	private int port;
 
 	private WebDriver driver;
+
+	private HomePage homePage;
+
+	private ResultPage resultPage;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -235,24 +241,21 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
-//	@Test
-//	public void testUserSignupLoginAndAddChatMessage(){
+	@Test
+	public void testUserNoteCreation(){
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
 
-//
-//		webDriver.get("http://localhost:" + port + "/signup");
-//		signupPage = new SignupPage(webDriver);
-//		signupPage.registerUser("Jane", "Doe", firstUser, firstUserPassword);
-//		webDriver.get("http://localhost:" + port + "/login");
-//		loginPage = new LoginPage(webDriver);
-//		loginPage.userLogin(firstUser, firstUserPassword);
-//		chatPage = new ChatPage(webDriver);
-//		chatPage.addChatMessage(firstUserChatMessage, "Shout");
-//		String[] result = chatPage.firstUserViewedMessages().get(0).split(":");
-//		assertEquals(firstUser, result[0] );
-//		assertEquals(firstUserChatMessage.toUpperCase(), result[1].toUpperCase().trim() );
-//		chatPage.userLogOut();
-//	}
+		homePage = new HomePage(driver);
+		homePage.addNewNote("To Do", "Wash Clothes");
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.getUserNotesTab();
 
+		Assertions.assertTrue(driver.getPageSource().contains("To Do"));
+		Assertions.assertTrue(driver.getPageSource().contains("Wash Clothes"));
+
+	}
 
 
 }

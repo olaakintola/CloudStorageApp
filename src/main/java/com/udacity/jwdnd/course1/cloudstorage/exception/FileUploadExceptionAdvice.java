@@ -11,7 +11,7 @@ public class FileUploadExceptionAdvice {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(Model model, MaxUploadSizeExceededException maxUploadSizeExceededException){
 
-        model.addAttribute("uploadFileError", "File is too large!");
-        return "result";
+        model.addAttribute("failureMessage", "Large File upload failed");
+        return "error-403";
     }
 }

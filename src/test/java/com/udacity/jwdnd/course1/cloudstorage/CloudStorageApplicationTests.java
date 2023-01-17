@@ -192,6 +192,8 @@ class CloudStorageApplicationTests {
 		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
 		String fileName = "upload5m.zip";
 
+//		String fileName = "C:\\Users\\olani\\OneDrive\\Desktop\\SAPHybrisFinal.pdf";
+
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileUpload")));
 		WebElement fileSelectButton = driver.findElement(By.id("fileUpload"));
 		fileSelectButton.sendKeys(new File(fileName).getAbsolutePath());
@@ -204,7 +206,6 @@ class CloudStorageApplicationTests {
 			System.out.println("Large File upload failed");
 		}
 		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
-
 	}
 
 

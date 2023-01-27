@@ -257,5 +257,31 @@ class CloudStorageApplicationTests {
 
 	}
 
+	@Test
+	public void testUserNoteEdit(){
+
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
+
+		homePage = new HomePage(driver);
+		homePage.addNewNote("To Do", "Wash Clothes");
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.userLogOut();
+
+		doLogIn("UT", "123");
+		homePage.getUserNotesTab();
+
+		Assertions.assertFalse(driver.getPageSource().contains("Change Me"));
+
+		homePage.editNote(" Change Me");
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.getUserNotesTab();
+
+		Assertions.assertTrue(driver.getPageSource().contains("Change Me"));
+
+	}
+
 
 }

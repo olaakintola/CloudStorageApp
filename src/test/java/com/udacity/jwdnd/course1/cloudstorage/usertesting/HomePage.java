@@ -35,6 +35,12 @@ public class HomePage {
     @FindBy(id = "nav-notes-tab")
     private WebElement navNotesTab;
 
+    @FindBy(id = "nav-notes")
+    private WebElement notesTab;
+
+    @FindBy(xpath = "//*[@id=\"user-notes\"]/td[1]/button")
+    private WebElement firstNoteEditButton;
+
     private WebDriverWait webDriverWait;
 
     public HomePage(WebDriver webDriver){
@@ -56,6 +62,23 @@ public class HomePage {
 
         webDriverWait.until(ExpectedConditions.visibilityOf(noteDescription));
         noteDescription.click();
+        noteDescription.sendKeys(description);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(saveNote));
+        saveNote.click();
+
+    }
+
+    public void editNote( String description){
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(notesTab));
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(firstNoteEditButton));
+        firstNoteEditButton.click();
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(noteDescription));
+        noteDescription.click();
+        noteDescription.clear();
         noteDescription.sendKeys(description);
 
         webDriverWait.until(ExpectedConditions.visibilityOf(saveNote));

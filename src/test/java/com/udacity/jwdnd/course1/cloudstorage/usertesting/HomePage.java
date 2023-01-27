@@ -77,11 +77,7 @@ public class HomePage {
 
     }
 
-//    public void waitForElement(WebElement parentElement){
-//        webDriverWait.until(ExpectedConditions.visibilityOf(parentElement));
-//    }
-
-    public WebElement getDynamicElement(int rowIndex){
+    public WebElement getNodeEditElement(int rowIndex){
 
         return parentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+ rowIndex +"]/button"));
     }
@@ -92,7 +88,7 @@ public class HomePage {
 
         int noteIndex = findNoteIndex(title);
         if(noteIndex != -1){
-            noteEditButton = getDynamicElement(noteIndex);
+            noteEditButton = getNodeEditElement(noteIndex);
 
             webDriverWait.until(ExpectedConditions.visibilityOf(notesTab));
 

@@ -304,7 +304,7 @@ class CloudStorageApplicationTests {
 		resultPage.getHomePage();
 		homePage.getUserNotesTab();
 
-		Assertions.assertTrue(driver.getPageSource().contains("Change Me"));
+		Assertions.assertFalse(driver.getPageSource().contains("To Do"));
 
 	}
 

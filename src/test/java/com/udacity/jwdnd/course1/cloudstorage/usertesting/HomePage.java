@@ -77,7 +77,7 @@ public class HomePage {
 
     }
 
-    public WebElement getNodeEditElement(int rowIndex){
+    public WebElement getNoteEditElement(int rowIndex){
 
         return parentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+ rowIndex +"]/button"));
     }
@@ -88,7 +88,7 @@ public class HomePage {
 
         int noteIndex = findNoteIndex(title);
         if(noteIndex != -1){
-            noteEditButton = getNodeEditElement(noteIndex);
+            noteEditButton = getNoteEditElement(noteIndex);
 
             webDriverWait.until(ExpectedConditions.visibilityOf(notesTab));
 
@@ -124,6 +124,26 @@ public class HomePage {
     }
 
     public void deleteNote(String title, String description){
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(parentElement));
+
+        int noteIndex = findNoteIndex(title);
+        if(noteIndex != -1){
+            noteEditButton = getNoteEditElement(noteIndex);
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(notesTab));
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(noteEditButton));
+            noteEditButton.click();
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(noteDescription));
+            noteDescription.click();
+            noteDescription.clear();
+            noteDescription.sendKeys(description);
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(saveNote));
+            saveNote.click();
+        }
 
     }
 

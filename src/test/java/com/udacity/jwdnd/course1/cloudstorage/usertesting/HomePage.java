@@ -8,8 +8,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HomePage {
@@ -41,7 +41,15 @@ public class HomePage {
     @FindBy(xpath = "//*[@id=\"user-notes\"]/td[1]/button")
     private WebElement firstNoteEditButton;
 
+    @FindBy(xpath = "//*[@id=\"userTable\"]")
+    private WebElement parentElement;
+
+    @FindBy(id = "user-notes")
+    private List<WebElement> allUserNotes;
+
     private WebDriverWait webDriverWait;
+
+    private WebElement noteEditButton;
 
     public HomePage(WebDriver webDriver){
         PageFactory.initElements(webDriver, this);
@@ -69,20 +77,57 @@ public class HomePage {
 
     }
 
-    public void editNote( String description){
+//    public void waitForElement(WebElement parentElement){
+//        webDriverWait.until(ExpectedConditions.visibilityOf(parentElement));
+//    }
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(notesTab));
+    public WebElement getDynamicElement(int rowIndex){
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(firstNoteEditButton));
-        firstNoteEditButton.click();
+        return parentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+ rowIndex +"]/button"));
+    }
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(noteDescription));
-        noteDescription.click();
-        noteDescription.clear();
-        noteDescription.sendKeys(description);
+    public void editNote(String title, String description){
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(saveNote));
-        saveNote.click();
+        webDriverWait.until(ExpectedConditions.visibilityOf(parentElement));
+
+        int noteIndex = findNoteIndex(title);
+        if(noteIndex != -1){
+            noteEditButton = getDynamicElement(noteIndex);
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(notesTab));
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(noteEditButton));
+            noteEditButton.click();
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(noteDescription));
+            noteDescription.click();
+            noteDescription.clear();
+            noteDescription.sendKeys(description);
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(saveNote));
+            saveNote.click();
+        }
+
+    }
+
+    private int findNoteIndex(String title) {
+
+        int rowIndex = 1;
+
+        for (WebElement userNote : allUserNotes) {
+            String[] noteRows = userNote.getText().split("\\r?\\n|\\r");;
+
+            if(noteRows[1].contains(title)){
+                return rowIndex;
+            }
+
+            rowIndex++;
+        }
+
+        return -1;
+    }
+
+    public void deleteNote(String title, String description){
 
     }
 

@@ -258,7 +258,7 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void testUserNoteEdit(){
+	public void testEditUserNote(){
 
 		doMockSignUp("URL","Test","UT","123");
 		doLogIn("UT", "123");
@@ -274,7 +274,32 @@ class CloudStorageApplicationTests {
 
 		Assertions.assertFalse(driver.getPageSource().contains("Change Me"));
 
-		homePage.editNote(" Change Me");
+		homePage.editNote("To Do"," Change Me");
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.getUserNotesTab();
+
+		Assertions.assertTrue(driver.getPageSource().contains("Change Me"));
+
+	}
+
+	public void testDeleteUserNote(){
+
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
+
+		homePage = new HomePage(driver);
+		homePage.addNewNote("To Do", "Wash Clothes");
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.userLogOut();
+
+		doLogIn("UT", "123");
+		homePage.getUserNotesTab();
+
+		Assertions.assertTrue(driver.getPageSource().contains("To Do"));
+
+		homePage.deleteNote("To Do", "Wash Note");
 		resultPage = new ResultPage(driver);
 		resultPage.getHomePage();
 		homePage.getUserNotesTab();

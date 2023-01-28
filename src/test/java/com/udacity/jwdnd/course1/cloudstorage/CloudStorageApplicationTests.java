@@ -324,11 +324,36 @@ class CloudStorageApplicationTests {
 		resultPage = new ResultPage(driver);
 		resultPage.getHomePage();
 		homePage.getUserCredentialsTab();
-		
+
 		Assertions.assertTrue(driver.getPageSource().contains("https://www.skysports.com/nba?gr=www"));
 		Assertions.assertTrue(driver.getPageSource().contains("Jane"));
 		Assertions.assertTrue(driver.getPageSource().contains(homePage.getCredentialPassword()));
 
+	}
+
+	@Test
+	public void testEditUserCredential(){
+
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
+
+		homePage = new HomePage(driver);
+		homePage.addNewCredential("https://www.skysports.com/nba?gr=www","Jane", "Doe");
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.userLogOut();
+
+		doLogIn("UT", "123");
+		homePage.getUserCredentialsTab();
+
+		homePage.editCredential("https://www.skysports.com/nba?gr=www","Ada","Lovelace" );
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.getUserCredentialsTab();
+
+		Assertions.assertTrue(driver.getPageSource().contains("https://www.skysports.com/nba?gr=www"));
+		Assertions.assertTrue(driver.getPageSource().contains("Ada"));
+		Assertions.assertTrue(driver.getPageSource().contains(homePage.getCredentialPassword()));
 	}
 
 }

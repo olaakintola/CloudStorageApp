@@ -182,7 +182,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="userCredential : ${userCredentials}" >
+                                <tr th:each="userCredential : ${userCredentials}" id="user-credentials">
                                     <td>
                                         <button type="button" class="btn btn-success" th:onclick="showCredentialModal([[${userCredential.credentialid}]], [[${userCredential.url}]], [[${userCredential.username}]], [[${unencryptedPasswordMap.get(userCredential.credentialid)}]] ) " >Edit</button>
                                         <a class="btn btn-danger" data-toggle="modal" data-target="#modal-warning-credential" th:attr="data-target='#modal-warning-credential'+${userCredential.credentialid}">Delete</a>

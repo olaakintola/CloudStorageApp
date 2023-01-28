@@ -59,11 +59,17 @@ public class HomePage {
     @FindBy(id = "nav-notes")
     private WebElement notesTab;
 
+    @FindBy(id = "nav-credentials")
+    private WebElement credentialsTab;
+
     @FindBy(xpath = "//*[@id=\"user-notes\"]/td[1]/button")
     private WebElement firstNoteEditButton;
 
     @FindBy(xpath = "//*[@id=\"userTable\"]")
-    private WebElement parentElement;
+    private WebElement noteParentElement;
+
+    @FindBy(xpath = "//*[@id=\"credentialTable\"]")
+    private WebElement credentialParentElement;
 
     @FindBy(className = "modal-dialog")
     private WebElement modalDialog;
@@ -71,9 +77,14 @@ public class HomePage {
     @FindBy(id = "user-notes")
     private List<WebElement> allUserNotes;
 
+    @FindBy(id = "user-credentials")
+    private List<WebElement> allCredentials;
+
     private WebDriverWait webDriverWait;
 
     private WebElement noteEditButton;
+
+    private WebElement credentialEditButton;
 
     private WebElement noteDeleteButton;
 
@@ -106,12 +117,12 @@ public class HomePage {
     }
 
     public WebElement getNoteEditElement(int noteIndex){
-        return parentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+ noteIndex +"]/button"));
+        return noteParentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+ noteIndex +"]/button"));
     }
 
     public void editNote(String title, String description){
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(parentElement));
+        webDriverWait.until(ExpectedConditions.visibilityOf(noteParentElement));
 
         int noteIndex = findNoteIndex(title);
         if(noteIndex != -1){
@@ -152,7 +163,7 @@ public class HomePage {
 
     public void deleteNote(String title, String description){
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(parentElement));
+        webDriverWait.until(ExpectedConditions.visibilityOf(noteParentElement));
 
         int noteIndex = findNoteIndex(title);
         if(noteIndex != -1){
@@ -177,7 +188,7 @@ public class HomePage {
     }
 
     private WebElement getNoteDeleteElement(int noteIndex) {
-        return parentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+noteIndex +"]/a"));
+        return noteParentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+noteIndex +"]/a"));
     }
 
     public void getUserNotesTab(){
@@ -220,8 +231,61 @@ public class HomePage {
         navCredentialsTab.click();
     }
 
+    // why not use decryptpassword here to get the text
     public String getCredentialPassword(){
         webDriverWait.until(ExpectedConditions.visibilityOf(encryptedPassword));
         return encryptedPassword.getText();
+    }
+
+    public void editCredential(String url, String username, String password) {
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(credentialParentElement));
+
+        int credentialIndex = findCredentialIndex(url);
+
+        if(credentialIndex != -1){
+
+            credentialEditButton = getCredentialEditElement(credentialIndex);
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(credentialsTab));
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(credentialEditButton));
+            credentialEditButton.click();
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(credentialUsername));
+            credentialUsername.click();
+            credentialUsername.clear();
+            credentialUsername.sendKeys(username);
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(credentialPassword));
+            credentialPassword.click();
+            credentialPassword.clear();
+            credentialPassword.sendKeys(password);
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(saveCredential));
+            saveCredential.click();
+        }
+    }
+
+    private WebElement getCredentialEditElement(int credentialIndex) {
+        return credentialParentElement.findElement(By.xpath("//*[@id=\"user-credentials\"]/td["+ credentialIndex +"]/button"));
+
+    }
+
+    private int findCredentialIndex(String url) {
+
+        int rowIndex = 1;
+
+        for (WebElement credential : allCredentials) {
+            String[] credentialRows = credential.getText().split("\\r?\\n|\\r");;
+
+            if(credentialRows[1].contains(url)){
+                return rowIndex;
+            }
+
+            rowIndex++;
+        }
+
+        return -1;
     }
 }

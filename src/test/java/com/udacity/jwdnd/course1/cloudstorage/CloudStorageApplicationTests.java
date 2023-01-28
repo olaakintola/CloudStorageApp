@@ -283,10 +283,12 @@ class CloudStorageApplicationTests {
 
 	}
 
+
+	@Test
 	public void testDeleteUserNote(){
 
-		doMockSignUp("URL","Test","UT","123");
-		doLogIn("UT", "123");
+		doMockSignUp("Jane","Doe","JD","123");
+		doLogIn("JD", "123");
 
 		homePage = new HomePage(driver);
 		homePage.addNewNote("To Do", "Wash Clothes");
@@ -294,7 +296,7 @@ class CloudStorageApplicationTests {
 		resultPage.getHomePage();
 		homePage.userLogOut();
 
-		doLogIn("UT", "123");
+		doLogIn("JD", "123");
 		homePage.getUserNotesTab();
 
 		Assertions.assertTrue(driver.getPageSource().contains("To Do"));

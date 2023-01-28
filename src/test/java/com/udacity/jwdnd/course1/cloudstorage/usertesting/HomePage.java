@@ -44,12 +44,19 @@ public class HomePage {
     @FindBy(xpath = "//*[@id=\"userTable\"]")
     private WebElement parentElement;
 
+    @FindBy(className = "modal-dialog")
+    private WebElement modalDialog;
+
     @FindBy(id = "user-notes")
     private List<WebElement> allUserNotes;
 
     private WebDriverWait webDriverWait;
 
     private WebElement noteEditButton;
+
+    private WebElement noteDeleteButton;
+
+    private WebElement confirmDeleteButton;
 
     public HomePage(WebDriver webDriver){
         PageFactory.initElements(webDriver, this);
@@ -77,9 +84,8 @@ public class HomePage {
 
     }
 
-    public WebElement getNoteEditElement(int rowIndex){
-
-        return parentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+ rowIndex +"]/button"));
+    public WebElement getNoteEditElement(int noteIndex){
+        return parentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+ noteIndex +"]/button"));
     }
 
     public void editNote(String title, String description){
@@ -129,22 +135,28 @@ public class HomePage {
 
         int noteIndex = findNoteIndex(title);
         if(noteIndex != -1){
-            noteEditButton = getNoteEditElement(noteIndex);
+            noteDeleteButton = getNoteDeleteElement(noteIndex);
 
             webDriverWait.until(ExpectedConditions.visibilityOf(notesTab));
 
-            webDriverWait.until(ExpectedConditions.visibilityOf(noteEditButton));
-            noteEditButton.click();
+            webDriverWait.until(ExpectedConditions.visibilityOf(noteDeleteButton));
+            noteDeleteButton.click();
 
-            webDriverWait.until(ExpectedConditions.visibilityOf(noteDescription));
-            noteDescription.click();
-            noteDescription.clear();
-            noteDescription.sendKeys(description);
-
-            webDriverWait.until(ExpectedConditions.visibilityOf(saveNote));
-            saveNote.click();
+            confirmDeleteButton = getNoteDeleteConfirmationElement(noteIndex);
+            webDriverWait.until(ExpectedConditions.visibilityOf(confirmDeleteButton));
+            confirmDeleteButton.click();
         }
 
+    }
+
+    private WebElement getNoteDeleteConfirmationElement(int noteIndex){
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(modalDialog));
+        return modalDialog.findElement(By.xpath(".//a[contains(.,'Yes')]"));
+    }
+
+    private WebElement getNoteDeleteElement(int noteIndex) {
+        return parentElement.findElement(By.xpath("//*[@id=\"user-notes\"]/td["+noteIndex +"]/a"));
     }
 
     public void getUserNotesTab(){

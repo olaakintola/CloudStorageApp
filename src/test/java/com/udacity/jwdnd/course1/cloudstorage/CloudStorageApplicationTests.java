@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import com.udacity.jwdnd.course1.cloudstorage.usertesting.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.usertesting.ResultPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -16,6 +17,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.util.Assert;
 
 import java.io.File;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
@@ -32,6 +35,8 @@ class CloudStorageApplicationTests {
 	private HomePage homePage;
 
 	private ResultPage resultPage;
+
+	private EncryptionService encryptionService;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -307,8 +312,23 @@ class CloudStorageApplicationTests {
 		homePage.getUserNotesTab();
 
 		Assertions.assertFalse(driver.getPageSource().contains("To Do"));
-
 	}
 
+	@Test
+	public void testUserCredentialCreation(){
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
+
+		homePage = new HomePage(driver);
+		homePage.addNewCredential("https://www.skysports.com/nba?gr=www","Jane", "Doe");
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.getUserCredentialsTab();
+		
+		Assertions.assertTrue(driver.getPageSource().contains("https://www.skysports.com/nba?gr=www"));
+		Assertions.assertTrue(driver.getPageSource().contains("Jane"));
+		Assertions.assertTrue(driver.getPageSource().contains(homePage.getCredentialPassword()));
+
+	}
 
 }

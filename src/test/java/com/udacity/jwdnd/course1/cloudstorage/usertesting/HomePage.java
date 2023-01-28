@@ -20,20 +20,41 @@ public class HomePage {
     @FindBy(id = "addNote-button")
     private WebElement addNoteButton;
 
+    @FindBy(id="addCredential-button")
+    private WebElement addCredentialButton;
+
     @FindBy(id = "note-title")
     private WebElement noteTitle;
 
     @FindBy(id = "note-description")
     private WebElement noteDescription;
 
+    @FindBy(id = "credential-url")
+    private WebElement credentialUrl;
+
+    @FindBy(id = "credential-username")
+    private WebElement credentialUsername;
+
+    @FindBy(id = "credential-password")
+    private WebElement credentialPassword;
+
     @FindBy(id = "saveNote")
     private WebElement saveNote;
+
+    @FindBy(id = "saveCredential" )
+    private WebElement saveCredential;
 
     @FindBy(id = "user-notes")
     private List<WebElement> userNotes;
 
     @FindBy(id = "nav-notes-tab")
     private WebElement navNotesTab;
+
+    @FindBy(id="nav-credentials-tab")
+    private WebElement navCredentialsTab;
+
+    @FindBy(xpath = "//*[@id=\"credentialTable\"]/tbody/tr/td[3]")
+    private WebElement encryptedPassword;
 
     @FindBy(id = "nav-notes")
     private WebElement notesTab;
@@ -168,5 +189,39 @@ public class HomePage {
 
     public void userLogOut(){
         this.logoutButton.click();
+    }
+
+    public void addNewCredential(String url, String username, String password) {
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(navCredentialsTab));
+        navCredentialsTab.click();
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(addCredentialButton));
+        addCredentialButton.click();
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(credentialUrl));
+        credentialUrl.click();
+        credentialUrl.sendKeys(url);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(credentialUsername));
+        credentialUsername.click();
+        credentialUsername.sendKeys(username);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(credentialPassword));
+        credentialPassword.click();
+        credentialPassword.sendKeys(password);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(saveCredential));
+        saveCredential.click();
+    }
+
+    public void getUserCredentialsTab() {
+        webDriverWait.until(ExpectedConditions.visibilityOf(navCredentialsTab));
+        navCredentialsTab.click();
+    }
+
+    public String getCredentialPassword(){
+        webDriverWait.until(ExpectedConditions.visibilityOf(encryptedPassword));
+        return encryptedPassword.getText();
     }
 }

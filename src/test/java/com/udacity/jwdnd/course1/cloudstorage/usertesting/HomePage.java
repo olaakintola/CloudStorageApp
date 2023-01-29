@@ -74,6 +74,10 @@ public class HomePage {
     @FindBy(className = "modal-dialog")
     private WebElement modalDialog;
 
+    //*[@id="modal-warning-credential1"]/div
+    @FindBy(xpath = "//*[@id=\"modal-warning-credential1\"]/div")
+    private WebElement credentialModalDialog;
+
     @FindBy(id = "user-notes")
     private List<WebElement> allUserNotes;
 
@@ -88,7 +92,11 @@ public class HomePage {
 
     private WebElement noteDeleteButton;
 
-    private WebElement confirmDeleteButton;
+    private WebElement credentialDeleteButton;
+
+    private WebElement noteConfirmDeleteButton;
+
+    private WebElement credentialConfirmDeleteButton;
 
     public HomePage(WebDriver webDriver){
         PageFactory.initElements(webDriver, this);
@@ -174,9 +182,9 @@ public class HomePage {
             webDriverWait.until(ExpectedConditions.visibilityOf(noteDeleteButton));
             noteDeleteButton.click();
 
-            confirmDeleteButton = getNoteDeleteConfirmationElement(noteIndex);
-            webDriverWait.until(ExpectedConditions.visibilityOf(confirmDeleteButton));
-            confirmDeleteButton.click();
+            noteConfirmDeleteButton = getNoteDeleteConfirmationElement(noteIndex);
+            webDriverWait.until(ExpectedConditions.visibilityOf(noteConfirmDeleteButton));
+            noteConfirmDeleteButton.click();
         }
 
     }
@@ -287,5 +295,35 @@ public class HomePage {
         }
 
         return -1;
+    }
+
+    public void deleteCredential(String url, String username, String password) {
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(credentialParentElement));
+
+        int credentialIndex = findCredentialIndex(url);
+        if(credentialIndex != -1){
+            credentialDeleteButton = getCredentialDeleteElement(credentialIndex);
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(credentialsTab));
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(credentialDeleteButton));
+            credentialDeleteButton.click();
+
+            credentialConfirmDeleteButton = getCredentialDeleteConfirmationElement(credentialIndex);
+            webDriverWait.until(ExpectedConditions.visibilityOf(credentialConfirmDeleteButton));
+            credentialConfirmDeleteButton.click();
+        }
+    }
+
+    private WebElement getCredentialDeleteConfirmationElement(int credentialIndex) {
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(credentialModalDialog));
+//        return credentialModalDialog.findElement(By.xpath("//*[@id=\"modal-warning-credential1\"]/div/div/div[3]/a"));
+        return credentialModalDialog.findElement(By.xpath(".//a[contains(.,'Yes')]"));
+    }
+
+    private WebElement getCredentialDeleteElement(int credentialIndex) {
+        return credentialParentElement.findElement(By.xpath("//*[@id=\"user-credentials\"]/td["+credentialIndex +"]/a"));
     }
 }

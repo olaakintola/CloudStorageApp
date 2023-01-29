@@ -328,7 +328,6 @@ class CloudStorageApplicationTests {
 		Assertions.assertTrue(driver.getPageSource().contains("https://www.skysports.com/nba?gr=www"));
 		Assertions.assertTrue(driver.getPageSource().contains("Jane"));
 		Assertions.assertTrue(driver.getPageSource().contains(homePage.getCredentialPassword()));
-
 	}
 
 	@Test
@@ -354,6 +353,30 @@ class CloudStorageApplicationTests {
 		Assertions.assertTrue(driver.getPageSource().contains("https://www.skysports.com/nba?gr=www"));
 		Assertions.assertTrue(driver.getPageSource().contains("Ada"));
 		Assertions.assertTrue(driver.getPageSource().contains(homePage.getCredentialPassword()));
+	}
+
+	@Test
+	public void testDeleteUserCredential(){
+
+		doMockSignUp("Ada","Lovelace","Ada","123");
+		doLogIn("Ada", "123");
+
+		homePage = new HomePage(driver);
+		homePage.addNewCredential("https://www.skysports.com/nba?gr=www","Jane", "Doe");
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.userLogOut();
+
+		doLogIn("Ada", "123");
+		homePage.getUserCredentialsTab();
+		homePage.deleteCredential("https://www.skysports.com/nba?gr=www","Jane","Doe" );
+		resultPage = new ResultPage(driver);
+		resultPage.getHomePage();
+		homePage.getUserCredentialsTab();
+
+		Assertions.assertFalse(driver.getPageSource().contains("https://www.skysports.com/nba?gr=www"));
+		Assertions.assertFalse(driver.getPageSource().contains("Jane"));
+
 	}
 
 }

@@ -71,12 +71,11 @@ public class HomePage {
     @FindBy(xpath = "//*[@id=\"credentialTable\"]")
     private WebElement credentialParentElement;
 
-    @FindBy(className = "modal-dialog")
-    private WebElement modalDialog;
+    @FindBy(css = "div[name='usernote_modal_dialog']")
+    private WebElement noteDeleteModalDialog;
 
-    //*[@id="modal-warning-credential1"]/div
-    @FindBy(xpath = "//*[@id=\"modal-warning-credential1\"]/div")
-    private WebElement credentialModalDialog;
+    @FindBy(css = "div[name='credential_modal_dialog']")
+    private WebElement credentialDeleteModalDialog;
 
     @FindBy(id = "user-notes")
     private List<WebElement> allUserNotes;
@@ -191,8 +190,8 @@ public class HomePage {
 
     private WebElement getNoteDeleteConfirmationElement(int noteIndex){
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(modalDialog));
-        return modalDialog.findElement(By.xpath(".//a[contains(.,'Yes')]"));
+        webDriverWait.until(ExpectedConditions.visibilityOf(noteDeleteModalDialog));
+        return noteDeleteModalDialog.findElement(By.xpath(".//a[contains(.,'Yes')]"));
     }
 
     private WebElement getNoteDeleteElement(int noteIndex) {
@@ -318,9 +317,9 @@ public class HomePage {
 
     private WebElement getCredentialDeleteConfirmationElement(int credentialIndex) {
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(credentialModalDialog));
+        webDriverWait.until(ExpectedConditions.visibilityOf(credentialDeleteModalDialog));
 //        return credentialModalDialog.findElement(By.xpath("//*[@id=\"modal-warning-credential1\"]/div/div/div[3]/a"));
-        return credentialModalDialog.findElement(By.xpath(".//a[contains(.,'Yes')]"));
+        return credentialDeleteModalDialog.findElement(By.xpath(".//a[contains(.,'Yes')]"));
     }
 
     private WebElement getCredentialDeleteElement(int credentialIndex) {

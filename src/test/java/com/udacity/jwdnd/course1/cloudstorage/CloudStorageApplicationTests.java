@@ -6,7 +6,6 @@ import com.udacity.jwdnd.course1.cloudstorage.usertesting.ResultPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,15 +13,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.util.Assert;
 
 import java.io.File;
-import java.security.SecureRandom;
-import java.util.Base64;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
-import static org.springframework.util.Assert.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
@@ -306,7 +298,7 @@ class CloudStorageApplicationTests {
 
 		Assertions.assertTrue(driver.getPageSource().contains("To Do"));
 
-		homePage.deleteNote("To Do", "Wash Note");
+		homePage.deleteNote("To Do");
 		resultPage = new ResultPage(driver);
 		resultPage.getHomePage();
 		homePage.getUserNotesTab();
@@ -369,7 +361,7 @@ class CloudStorageApplicationTests {
 
 		doLogIn("Ada", "123");
 		homePage.getUserCredentialsTab();
-		homePage.deleteCredential("https://www.skysports.com/nba?gr=www","Jane","Doe" );
+		homePage.deleteCredential("https://www.skysports.com/nba?gr=www" );
 		resultPage = new ResultPage(driver);
 		resultPage.getHomePage();
 		homePage.getUserCredentialsTab();

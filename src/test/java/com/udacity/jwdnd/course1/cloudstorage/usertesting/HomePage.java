@@ -8,8 +8,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class HomePage {
@@ -168,7 +166,7 @@ public class HomePage {
         return -1;
     }
 
-    public void deleteNote(String title, String description){
+    public void deleteNote(String title){
 
         webDriverWait.until(ExpectedConditions.visibilityOf(noteParentElement));
 
@@ -181,14 +179,14 @@ public class HomePage {
             webDriverWait.until(ExpectedConditions.visibilityOf(noteDeleteButton));
             noteDeleteButton.click();
 
-            noteConfirmDeleteButton = getNoteDeleteConfirmationElement(noteIndex);
+            noteConfirmDeleteButton = getNoteDeleteConfirmationElement();
             webDriverWait.until(ExpectedConditions.visibilityOf(noteConfirmDeleteButton));
             noteConfirmDeleteButton.click();
         }
 
     }
 
-    private WebElement getNoteDeleteConfirmationElement(int noteIndex){
+    private WebElement getNoteDeleteConfirmationElement(){
 
         webDriverWait.until(ExpectedConditions.visibilityOf(noteDeleteModalDialog));
         return noteDeleteModalDialog.findElement(By.xpath(".//a[contains(.,'Yes')]"));
@@ -296,7 +294,7 @@ public class HomePage {
         return -1;
     }
 
-    public void deleteCredential(String url, String username, String password) {
+    public void deleteCredential(String url) {
 
         webDriverWait.until(ExpectedConditions.visibilityOf(credentialParentElement));
 
@@ -309,16 +307,15 @@ public class HomePage {
             webDriverWait.until(ExpectedConditions.visibilityOf(credentialDeleteButton));
             credentialDeleteButton.click();
 
-            credentialConfirmDeleteButton = getCredentialDeleteConfirmationElement(credentialIndex);
+            credentialConfirmDeleteButton = getCredentialDeleteConfirmationElement();
             webDriverWait.until(ExpectedConditions.visibilityOf(credentialConfirmDeleteButton));
             credentialConfirmDeleteButton.click();
         }
     }
 
-    private WebElement getCredentialDeleteConfirmationElement(int credentialIndex) {
+    private WebElement getCredentialDeleteConfirmationElement() {
 
         webDriverWait.until(ExpectedConditions.visibilityOf(credentialDeleteModalDialog));
-//        return credentialModalDialog.findElement(By.xpath("//*[@id=\"modal-warning-credential1\"]/div/div/div[3]/a"));
         return credentialDeleteModalDialog.findElement(By.xpath(".//a[contains(.,'Yes')]"));
     }
 
